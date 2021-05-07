@@ -21,4 +21,5 @@ docker run --rm -ti --network=none \
     -v resolve_database_$USER:/opt/resolve/Resolve\ Disk\ Database \
     -v resolve_logs_$USER:/opt/resolve/logs \
     -v /srv/archive/test:/opt/resolve/Media \
-    registry.gitlab.com/mash-graz/resolve$MESA $*
+    davinci-studio
+#    registry.gitlab.com/mash-graz/resolve$MESA $*
