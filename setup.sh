@@ -7,4 +7,4 @@ rm -rf squashfs-root
 rm -rf $_archive.run
 rm -rf $_archive.zip
 rm -rf *.pdf
-docker build . -t davinci-studio
+docker build . -t davinci-studio --build-arg username=${USER}

@@ -1,14 +1,12 @@
 FROM nvidia/cuda:11.3.0-devel-centos8
 
-ARG mesa
-ARG version=17.1.1
+ARG username
 
-RUN yum -y install  usbutils pciutils psmisc bzip2 unzip rsync \
-    ${mesa} glx-utils mesa-libGLU libXmu libXi libSM freetype librsvg2  \
+RUN yum -y install epel-release \
+    && yum -y install  usbutils pciutils psmisc bzip2 unzip rsync \
+    glx-utils mesa-libGLU libXmu libXi libSM freetype librsvg2  \
     alsa-lib   alsa-plugins-pulseaudio libgomp libxkbcommon fuse-libs wget \
-    java-11-openjdk-devel \
-    && yum -y install epel-release \
-    && yum -y install ocl-icd xorriso \
+    java-11-openjdk-devel ocl-icd xorriso log4cxx.x86_64  cuda \
     && rm -rf /var/cache/yum/*
 
 RUN mkdir -p /etc/OpenCL/vendors \
@@ -30,12 +28,15 @@ RUN dbus-uuidgen > /etc/machine-id
 
 VOLUME ["/opt/resolve/configs", "/opt/resolve/Resolve Disk Database", "/opt/resolve/logs"]
 
-RUN chown nobody:nobody /opt/resolve/logs
-RUN chown nobody:nobody /opt/resolve/configs
+RUN useradd -ms /bin/bash ${username}
 
-USER nobody:nobody
+USER ${username}:${username}
+WORKDIR /home/${username}
+
+RUN mkdir /home/${username}/.local
+
 CMD /opt/resolve/bin/resolve
 
 # nvidia-container-runtime 
-#ENV NVIDIA_VISIBLE_DEVICES all 
-#ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES},display,video
+ENV NVIDIA_VISIBLE_DEVICES all 
+ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES},display,video

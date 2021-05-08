@@ -7,7 +7,7 @@ XAUTH=/tmp/.docker.xauth
 touch $XAUTH
 xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
 
-docker run --rm -ti --network=none \
+docker run --name davinci-studio-console --rm -ti \
     --runtime=nvidia \
     --user $(id -u):$(id -g) \
     --privileged \
@@ -21,5 +21,6 @@ docker run --rm -ti --network=none \
     -v resolve_database_$USER:/opt/resolve/Resolve\ Disk\ Database \
     -v resolve_logs_$USER:/opt/resolve/logs \
     -v /srv/archive/test:/opt/resolve/Media \
+    -v resolve_local_$USER:/home/$USER/.local \
     davinci-studio
 #    registry.gitlab.com/mash-graz/resolve$MESA $*
